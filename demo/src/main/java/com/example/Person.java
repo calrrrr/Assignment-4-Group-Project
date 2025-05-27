@@ -28,6 +28,7 @@ public class Person {
         this.address = address;
         this.birthdate = birthdate;
         
+        
         //Condition 1
         //PersonID should be exactly 10 characters long
         if (personID.length() != 10) {
