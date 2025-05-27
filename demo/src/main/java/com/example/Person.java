@@ -49,7 +49,7 @@ public class Person {
         if (specialCount < 2) {
             return false;
         }
-        
+
         if (!personID.substring(8, 10).matches("[A-Z]{2}")) {
             return false; // Last two characters must be uppercase letters
         }
