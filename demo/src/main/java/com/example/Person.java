@@ -1,10 +1,15 @@
 package com.example;
 import java.util.HashMap;
 import java.util.Date;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Person {
     
@@ -13,8 +18,10 @@ public class Person {
     private String lastName;
     private String address;
     private String birthdate;
-    private HashMap<Date, Integer> demeritPoints;
+    private HashMap<Date, Integer> demeritPoints = new HashMap<>();
     private boolean isSuspended;
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
     public boolean addPerson(String personID, String address, String birthdate, File file) {
         this.personID = personID;
@@ -84,8 +91,72 @@ public class Person {
         return true; // Assuming the update is successful
     }
 
-    public String addDemeritPoints(){
+    public String addDemeritPoints(String personID, int points, String dateStr){
         // Logic to add demerit points
-        return "Sucess"; // Assuming the addition is successful
+    try {
+            // Condition 1: Validate date format
+            Date offenceDate;
+            try {
+                offenceDate = DATE_FORMAT.parse(dateStr);
+            } catch (ParseException e) {
+                return "Failed";
+            }
+
+            // Condition 2: Validate demerit point range
+            if (points < 1 || points > 6) return "Failed";
+
+            // Person must match
+            if (!personID.equals(this.personID)) return "Failed";
+
+            // Store in internal map (optional but aligns with your variable)
+            demeritPoints.put(offenceDate, points);
+
+            // Calculate total points in last 2 years
+            int totalRecentPoints = 0;
+            Calendar twoYearsAgo = Calendar.getInstance();
+            twoYearsAgo.add(Calendar.YEAR, -2);
+
+            for (Date date : demeritPoints.keySet()) {
+                if (date.after(twoYearsAgo.getTime())) {
+                    totalRecentPoints += demeritPoints.get(date);
+                }
+            }
+
+            // Calculate age
+            Date birthDate = DATE_FORMAT.parse(this.birthdate);
+            Calendar birthCal = Calendar.getInstance();
+            birthCal.setTime(birthDate);
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
+            if (today.get(Calendar.DAY_OF_YEAR) < birthCal.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+
+            // Condition 3: Suspension logic
+            if ((age < 21 && totalRecentPoints > 6) || (age >= 21 && totalRecentPoints > 12)) {
+                this.isSuspended = true;
+            }
+
+            // Write to demerits file
+            File file = new File("demerits.txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                writer.write(personID + "|" + points + "|" + DATE_FORMAT.format(offenceDate) + "|" +
+                        (this.isSuspended ? "Suspended" : "Active"));
+                writer.newLine();
+            }
+
+            return "Success";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed";
+        }
     }
+
+    // Optional: Getter for isSuspended
+    public boolean isSuspended() {
+        return this.isSuspended;
+    }
+    
 }
+
