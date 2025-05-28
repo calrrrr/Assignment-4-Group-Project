@@ -23,6 +23,10 @@ public class Person {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
+    static {
+        DATE_FORMAT.setLenient(false); 
+    }
+
     public boolean addPerson(String personID, String address, String birthdate, File file) {
         this.personID = personID;
         this.address = address;
@@ -92,7 +96,7 @@ public class Person {
         return true; // Assuming the update is successful
     }
 
-    public String addDemeritPoints(String personID, int points, String dateStr){
+    public String addDemeritPoints(String personID, int points, String dateStr, File file){
         // Logic to add demerit points
     try {
             // Condition 1: Validate date format
@@ -109,7 +113,7 @@ public class Person {
             // Person must match
             if (!personID.equals(this.personID)) return "Failed";
 
-            // Store in internal map (optional but aligns with your variable)
+            // Store in internal map 
             demeritPoints.put(offenceDate, points);
 
             // Calculate total points in last 2 years
@@ -139,7 +143,6 @@ public class Person {
             }
 
             // Write to demerits file
-            File file = new File("demerits.txt");
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
                 writer.write(personID + "|" + points + "|" + DATE_FORMAT.format(offenceDate) + "|" +
                         (this.isSuspended ? "Suspended" : "Active"));
