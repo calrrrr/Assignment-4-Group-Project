@@ -91,9 +91,24 @@ public class Person {
         }
     }
 
-    public boolean updatePersonalDetails(){
-        // Logic to update personal details
-        return true; // Assuming the update is successful
+    public boolean updatePersonalDetails(String personID, String firstName, String lastName, String address, String birthdate, File file){
+        // Logic to update personal details of the person
+        // Convert birthdate string into Date object
+        Date birthDate = DATE_FORMAT.prase(this.birthdate);
+        Calendar birthCal = Calendar.getInstance();
+        birthCal.setTime(birthDate);
+        Calendar today = Calendar.getInstance();
+        //find approximate age
+        int age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
+        //if the date of the birthday is after todays date, decrement age by one.
+        if (today.get(Calendar.DAY_OF_YEAR)<birthCal.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+        
+        if (age < 18 && this.address != address){
+            return false;
+        }
+
     }
 
     public String addDemeritPoints(String personID, int points, String dateStr, File file){
