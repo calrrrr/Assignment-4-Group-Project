@@ -105,15 +105,26 @@ public class Person {
             age--;
         }
         
-        if (age < 18 && this.address != address){
+        // Condition 1: If the age of the person is under 18, the address cannot be changed.
+        if (age < 18 && !this.address.equals(address)){
             return false;
         }
 
+        //Condition 2: If a person's birthday is going to be changed, then no other personal detail (i.e, person's ID, firstName, lastName, address) can be changed.
+        if((!this.birthdate.equals(birthdate)) && (!this.personID.equals(personID))|| (!this.firstName.equals(firstName))||(!this.lastName.equals(lastName))||(!this.address.equals(address))){
+            return false;
+        }
+
+        //Condition 3: If the first character/digit of a person's ID is an even number, then 
+        if (Character.isDigit(this.personID.charAt(0)) && Integer.parseInt(String.valueOf(this.personID.charAt(0))) % 2 == 0 && !this.personID.equals(personID)) {
+            return false;
+        }
     }
 
     public String addDemeritPoints(String personID, int points, String dateStr, File file){
         // Logic to add demerit points
     try {
+        
             // Condition 1: Validate date format
             Date offenceDate;
             try {
