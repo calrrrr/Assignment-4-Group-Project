@@ -130,7 +130,7 @@ public class PersonTest {
         Person person = new Person();
         boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
         assertTrue(result);
-        boolean result2 = person.updatePersonalDetails("97s_d@%fDA", "Jane", "Doe", "100|Grove St|Los Angeles|California|USA", "15-11-1999", testFile);
+        boolean result2 = person.updatePersonalDetails("97s_d@%fDA", "Jane", "Doe", "100|Grove St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
         assertTrue(result2);
     }
 
