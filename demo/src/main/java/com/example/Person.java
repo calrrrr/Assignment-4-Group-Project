@@ -78,6 +78,10 @@ public class Person {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write("PersonID: " + personID);
             writer.newLine();
+            writer.write("FirstName: " + firstName);
+            writer.newLine();
+            writer.write("LastName: " + lastName);
+            writer.newLine();
             writer.write("Address: " + address);
             writer.newLine();
             writer.write("Birthdate: " + birthdate);
