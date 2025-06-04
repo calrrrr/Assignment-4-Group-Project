@@ -99,7 +99,7 @@ public class PersonTest {
     }     
     
     @Test
-    void testUnderageAddressChange(){
+    void testInvalidUnderageAddressChange(){
         Person person = new Person();
         boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010", testFile);
         assertTrue(result);
@@ -108,7 +108,7 @@ public class PersonTest {
     }
 
     @Test 
-    void testBirthdateOnlyChange(){
+    void testInvalidBirthdateOnlyChange(){
         Person person = new Person();
         boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
         assertTrue(result);
@@ -117,12 +117,29 @@ public class PersonTest {
     }
 
     @Test 
-    void testFirstDigitEvenNumber(){
+    void testInvalidFirstDigitEvenNumber(){
         Person person = new Person();
         boolean result = person.addPerson("47s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
         assertTrue(result);
-        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-12-2000", testFile);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
         assertFalse(result2);
+    }
+
+    @Test 
+    void testValidDetailsChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("97s_d@%fDA", "Jane", "Doe", "100|Grove St|Los Angeles|California|USA", "15-11-1999", testFile);
+        assertTrue(result2);
+    }
+
+    @Test testValidBirthDayOnlyChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-2000", testFile);
+        assertTrue(result2);
     }
 
 }
