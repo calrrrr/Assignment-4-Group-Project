@@ -113,12 +113,10 @@ public class Person {
                 age--;
             }
 
-            // Condition 1: If the age of the person is under 18, the address cannot be changed.
             if (age < 18 && !this.address.equals(address)){
                 return false;
             }
 
-            //Condition 2: If a person's birthday is going to be changed, then no other personal detail (i.e, person's ID, firstName, lastName, address) can be changed.
             if(!this.birthdate.equals(birthdate) && (
                 !this.personID.equals(personID) ||
                 !this.firstName.equals(firstName) ||
@@ -127,27 +125,22 @@ public class Person {
                 return false;
             }
 
-            //Condition 3: If the first character/digit of a person's ID is an even number, then 
             if (Character.isDigit(this.personID.charAt(0)) && Integer.parseInt(String.valueOf(this.personID.charAt(0))) % 2 == 0 && !this.personID.equals(personID)) {
                 return false;
             }
 
-            //ensure formatting from function 1 is correct
             if (!this.address.equals(address)) {
                 if (!address.matches("^\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+$")){
                     return false;
                 }
             }
             if (!this.personID.equals(personID)){
-                //personID formatting
                 if (personID.length() != 10) {
-                    return false; // Invalid personID length
+                    return false;
                 }
-
                 if (personID.charAt (0) < '2' || personID.charAt(0) > '9' || personID.charAt(1) < '2' || personID.charAt(1) > '9') {
-                    return false; // First two characters must be between 2 and 9
+                    return false;
                 }
-                
                 String middle = personID.substring(2, 8);
                 int specialCount = 0;
                 for (char c : middle.toCharArray()) {
@@ -158,16 +151,13 @@ public class Person {
                 if (specialCount < 2) {
                     return false;
                 }
-
-                //ensure formatting of personID from function 1 is correct
                 if (!personID.substring(8, 10).matches("[A-Z]{2}")) {
-                    return false; // Last two characters must be uppercase letters
+                    return false;
                 }
             }
-            //ensure formatting of birthday from function 1 matches
             if (!this.birthdate.equals(birthdate)) {
                 if (!birthdate.matches("^\\d{2}-\\d{2}-\\d{4}$")) {
-                    return false; // Invalid birthdate format
+                    return false;
                 }
             }
 
@@ -197,36 +187,35 @@ public class Person {
                     writer.newLine();
                 }
             }
-
-            if (updated) {
-                if (file.delete()) {
-                    if(!tempFile.renameTo(file)){
-                        System.err.println("Could not rename temp file.");
-                        return false;
-                    }
-                }
-                else {
-                    System.err.println("Could not delete original file");
-                    return false;
-                }
-                this.personID = personID;
-                this.firstName = firstName;
-                this.lastName = lastName;
-                this.address = address;
-                this.birthdate = birthdate;
-                return true;
-            }   
-            else {
-                tempFile.delete(); //delete file if no update was made
-                return false; //person was not found on the file
-            }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            // Clean up temp file in case of exception during file operations
             if (tempFile.exists()) {
                 tempFile.delete();
             }
             return false;
+        }
+
+        if (updated) {
+            if (file.delete()) {
+                if(!tempFile.renameTo(file)){
+                    System.err.println("Could not rename temp file.");
+                    return false;
+                }
+            }
+            else {
+                System.err.println("Could not delete original file");
+                return false;
+            }
+            this.personID = personID;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.address = address;
+            this.birthdate = birthdate;
+            return true;
+        }   
+        else {
+            tempFile.delete(); //delete file if no update was made
+            return false; //person was not found on the file
         }
     }
             
