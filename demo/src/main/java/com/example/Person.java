@@ -27,8 +27,10 @@ public class Person {
         DATE_FORMAT.setLenient(false); 
     }
 
-    public boolean addPerson(String personID, String address, String birthdate, File file) {
+    public boolean addPerson(String personID, String firstName, String lastName, String address, String birthdate, File file) {
         this.personID = personID;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.address = address;
         this.birthdate = birthdate;
         
