@@ -134,7 +134,8 @@ public class PersonTest {
         assertTrue(result2);
     }
 
-    @Test testValidBirthDayOnlyChange(){
+    @Test 
+    void testValidBirthDayOnlyChange(){
         Person person = new Person();
         boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
         assertTrue(result);
