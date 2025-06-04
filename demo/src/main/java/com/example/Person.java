@@ -260,7 +260,7 @@ public class Person {
             int age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
             if (today.get(Calendar.DAY_OF_YEAR) < birthCal.get(Calendar.DAY_OF_YEAR)) {
                 age--;
-            }
+            } 
 
             // Condition 3: Suspension logic
             if ((age < 21 && totalRecentPoints > 6) || (age >= 21 && totalRecentPoints > 12)) {

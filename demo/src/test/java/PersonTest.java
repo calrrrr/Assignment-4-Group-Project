@@ -48,6 +48,51 @@ public class PersonTest {
         boolean result = person.addPerson("56!@abc#CD", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "1990-11-15", testFile);
         assertFalse(result);
     }
+    //test-case for updatePersonalDetails
+    @Test
+    void testInvalidUnderageAddressChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "100|Grove St|Los Angeles|Calofornia|USA", "15-11-2010", testFile);
+        assertFalse(result2);
+    }
+
+    @Test 
+    void testInvalidBirthdateOnlyChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "100|Grove St|Los Angeles|Calofornia|USA", "15-12-2000", testFile);
+        assertFalse(result2);
+    }
+
+    @Test 
+    void testInvalidFirstDigitEvenNumber(){
+        Person person = new Person();
+        boolean result = person.addPerson("47s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertFalse(result2);
+    }
+
+    @Test 
+    void testValidDetailsChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("97s_d@%fDA", "Jane", "Doe", "100|Grove St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result2);
+    }
+
+    @Test 
+    void testValidBirthDayOnlyChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-2000", testFile);
+        assertTrue(result2);
+    }
 
     //test-case for addDemeritPoints
 
@@ -97,50 +142,5 @@ public class PersonTest {
         String result2 = person.addDemeritPoints("WRONGID", 3, "10-05-2024", testFile);
         assertEquals("Failed", result2);
     }     
-    
-    @Test
-    void testInvalidUnderageAddressChange(){
-        Person person = new Person();
-        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010", testFile);
-        assertTrue(result);
-        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "100|Grove St|Los Angeles|Calofornia|USA", "15-11-2010", testFile);
-        assertFalse(result2);
-    }
-
-    @Test 
-    void testInvalidBirthdateOnlyChange(){
-        Person person = new Person();
-        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
-        assertTrue(result);
-        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "100|Grove St|Los Angeles|Calofornia|USA", "15-12-2000", testFile);
-        assertFalse(result2);
-    }
-
-    @Test 
-    void testInvalidFirstDigitEvenNumber(){
-        Person person = new Person();
-        boolean result = person.addPerson("47s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
-        assertTrue(result);
-        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
-        assertFalse(result2);
-    }
-
-    @Test 
-    void testValidDetailsChange(){
-        Person person = new Person();
-        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
-        assertTrue(result);
-        boolean result2 = person.updatePersonalDetails("97s_d@%fDA", "Jane", "Doe", "100|Grove St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
-        assertTrue(result2);
-    }
-
-    @Test 
-    void testValidBirthDayOnlyChange(){
-        Person person = new Person();
-        boolean result = person.addPerson("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
-        assertTrue(result);
-        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-11-2000", testFile);
-        assertTrue(result2);
-    }
 
 }
