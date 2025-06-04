@@ -92,9 +92,10 @@ public class Person {
     }
 
     public boolean updatePersonalDetails(String personID, String firstName, String lastName, String address, String birthdate, File file){
-        // Logic to update personal details of the person
-        // Convert birthdate string into Date object
-        Date birthDate = DATE_FORMAT.prase(this.birthdate);
+    File tempFile = new File(file.getAbsolutePath() + ".tmp");
+    boolean updated = false;
+    try {
+        Date birthDate = DATE_FORMAT.parse(this.birthdate);
         Calendar birthCal = Calendar.getInstance();
         birthCal.setTime(birthDate);
         Calendar today = Calendar.getInstance();
@@ -119,7 +120,105 @@ public class Person {
         if (Character.isDigit(this.personID.charAt(0)) && Integer.parseInt(String.valueOf(this.personID.charAt(0))) % 2 == 0 && !this.personID.equals(personID)) {
             return false;
         }
+
+        //ensure formatting from function 1 is correct
+        if (!this.address.equals(address)) {
+            if (!address.matches("^\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+$")){
+                    return false;
+            }
+        }
+        if (!this.personID.equals(personID)){
+            //personID formatting
+            if (personID.length() != 10) {
+                return false; // Invalid personID length
+            }
+
+            if (personID.charAt (0) < '2' || personID.charAt(0) > '9' || personID.charAt(1) < '2' || personID.charAt(1) > '9') {
+                return false; // First two characters must be between 2 and 9
+            }
+            
+            String middle = personID.substring(2, 8);
+            int specialCount = 0;
+            for (char c : middle.toCharArray()) {
+                if (!Character.isLetterOrDigit(c)) {
+                    specialCount++;
+                }
+            }
+            if (specialCount < 2) {
+                return false;
+            }
+
+            //ensure formatting of personID from function 1 is correct
+            if (!personID.substring(8, 10).matches("[A-Z]{2}")) {
+                return false; // Last two characters must be uppercase letters
+            }
+        }
+        //ensure formatting of birthday from function 1 matches
+        if (!this.birthdate.equals(birthdate)) {
+            if (!birthdate.matches("^\\d{2}-\\d{2}-\\d{4}$")) {
+                return false; // Invalid birthdate format
+            }
+        }
+
+        //Copy updated contents to temp file
+        try (BufferedReader reader = new BufferedReader(new FileReader(file));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+                String currentLine;
+
+                while ((currentLine = reader.readLine()) != null) {
+                    if (currentLine.startsWith("PersonID: " + this.personID)) {
+                        writer.write("PersonID: " + personID);
+                        writer.newLine();
+                        reader.readLine(); // Skip old address
+                        writer.write("Address: " + address);
+                        writer.newLine();
+                        reader.readLine(); // Skip old birthdate
+                        writer.write("Birthdate: " + birthdate);
+                        writer.newLine();
+                        reader.readLine(); // Skip separator
+                        writer.write("------");
+                        writer.newLine();
+                        updated = true;
+                    } else {
+                        writer.write(currentLine);
+                        writer.newLine();
+                    }
+                }
+            }
+
+            if (updated == true){
+                if (file.delete()){
+                    if(!tempFile.renameTo(file)){
+                        System.err.println("Could not rename temp file.");
+                        return false;
+                    }
+                }
+                else {
+                    System.err.println("Could not delete original file");
+                    return false;
+                }
+                this.personID = personID;
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.address = address;
+                this.birthdate = birthdate;
+                return true;
+            }   
+            else {
+                tempFile.delete(); //delete file if no update was made
+                return false; //person was not found on the file
+            }
+        }
+        catch (IOException | ParseException e) {
+            e.printStackTrace();
+            // Clean up temp file in case of exception during file operations
+            if (tempFile.exists()) {
+                tempFile.delete();
+            }
+            return false;
+        }
     }
+            
 
     public String addDemeritPoints(String personID, int points, String dateStr, File file){
         // Logic to add demerit points
