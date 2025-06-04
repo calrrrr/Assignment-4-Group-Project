@@ -96,6 +96,33 @@ public class PersonTest {
         assertTrue(result);
         String result2 = person.addDemeritPoints("WRONGID", 3, "10-05-2024", testFile);
         assertEquals("Failed", result2);
-    }       
+    }     
+    
+    @Test
+    void testUnderageAddressChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "100|Grove St|Los Angeles|Calofornia|USA", "15-11-2010", testFile);
+        assertFalse(result2);
+    }
+
+    @Test 
+    void testBirthdateOnlyChange(){
+        Person person = new Person();
+        boolean result = person.addPerson("57s_d@%fDA", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "100|Grove St|Los Angeles|Calofornia|USA", "15-12-2000", testFile);
+        assertFalse(result2);
+    }
+
+    @Test 
+    void testFirstDigitEvenNumber(){
+        Person person = new Person();
+        boolean result = person.addPerson("47s_d@%fDA", "123|Main St|Melbourne|Victoria|Australia", "15-11-1999", testFile);
+        assertTrue(result);
+        boolean result2 = person.updatePersonalDetails("57s_d@%fDA", "Bob", "Smith", "123|Main St|Melbourne|Victoria|Australia", "15-12-2000", testFile);
+        assertFalse(result2);
+    }
 
 }

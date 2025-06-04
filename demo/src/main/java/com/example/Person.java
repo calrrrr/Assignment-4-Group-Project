@@ -92,102 +92,108 @@ public class Person {
     }
 
     public boolean updatePersonalDetails(String personID, String firstName, String lastName, String address, String birthdate, File file){
-    File tempFile = new File(file.getAbsolutePath() + ".tmp");
-    boolean updated = false;
-    try {
-        Date birthDate = DATE_FORMAT.parse(this.birthdate);
-        Calendar birthCal = Calendar.getInstance();
-        birthCal.setTime(birthDate);
-        Calendar today = Calendar.getInstance();
-        //find approximate age
-        int age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
-        //if the date of the birthday is after todays date, decrement age by one.
-        if (today.get(Calendar.DAY_OF_YEAR)<birthCal.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-        
-        // Condition 1: If the age of the person is under 18, the address cannot be changed.
-        if (age < 18 && !this.address.equals(address)){
-            return false;
-        }
-
-        //Condition 2: If a person's birthday is going to be changed, then no other personal detail (i.e, person's ID, firstName, lastName, address) can be changed.
-        if((!this.birthdate.equals(birthdate)) && (!this.personID.equals(personID))|| (!this.firstName.equals(firstName))||(!this.lastName.equals(lastName))||(!this.address.equals(address))){
-            return false;
-        }
-
-        //Condition 3: If the first character/digit of a person's ID is an even number, then 
-        if (Character.isDigit(this.personID.charAt(0)) && Integer.parseInt(String.valueOf(this.personID.charAt(0))) % 2 == 0 && !this.personID.equals(personID)) {
-            return false;
-        }
-
-        //ensure formatting from function 1 is correct
-        if (!this.address.equals(address)) {
-            if (!address.matches("^\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+$")){
-                    return false;
-            }
-        }
-        if (!this.personID.equals(personID)){
-            //personID formatting
-            if (personID.length() != 10) {
-                return false; // Invalid personID length
+        File tempFile = new File(file.getAbsolutePath() + ".tmp");
+        boolean updated = false;
+        try (
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))
+        ) {
+            Date birthDate = DATE_FORMAT.parse(this.birthdate);
+            Calendar birthCal = Calendar.getInstance();
+            birthCal.setTime(birthDate);
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
+            if (today.get(Calendar.DAY_OF_YEAR) < birthCal.get(Calendar.DAY_OF_YEAR)) {
+                age--;
             }
 
-            if (personID.charAt (0) < '2' || personID.charAt(0) > '9' || personID.charAt(1) < '2' || personID.charAt(1) > '9') {
-                return false; // First two characters must be between 2 and 9
-            }
-            
-            String middle = personID.substring(2, 8);
-            int specialCount = 0;
-            for (char c : middle.toCharArray()) {
-                if (!Character.isLetterOrDigit(c)) {
-                    specialCount++;
-                }
-            }
-            if (specialCount < 2) {
+            // Condition 1: If the age of the person is under 18, the address cannot be changed.
+            if (age < 18 && !this.address.equals(address)){
                 return false;
             }
 
-            //ensure formatting of personID from function 1 is correct
-            if (!personID.substring(8, 10).matches("[A-Z]{2}")) {
-                return false; // Last two characters must be uppercase letters
+            //Condition 2: If a person's birthday is going to be changed, then no other personal detail (i.e, person's ID, firstName, lastName, address) can be changed.
+            if(!this.birthdate.equals(birthdate) && (
+                !this.personID.equals(personID) ||
+                !this.firstName.equals(firstName) ||
+                !this.lastName.equals(lastName) ||
+                !this.address.equals(address))) {
+                return false;
             }
-        }
-        //ensure formatting of birthday from function 1 matches
-        if (!this.birthdate.equals(birthdate)) {
-            if (!birthdate.matches("^\\d{2}-\\d{2}-\\d{4}$")) {
-                return false; // Invalid birthdate format
+
+            //Condition 3: If the first character/digit of a person's ID is an even number, then 
+            if (Character.isDigit(this.personID.charAt(0)) && Integer.parseInt(String.valueOf(this.personID.charAt(0))) % 2 == 0 && !this.personID.equals(personID)) {
+                return false;
             }
-        }
 
-        //Copy updated contents to temp file
-        try (BufferedReader reader = new BufferedReader(new FileReader(file));
-                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-                String currentLine;
+            //ensure formatting from function 1 is correct
+            if (!this.address.equals(address)) {
+                if (!address.matches("^\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+$")){
+                    return false;
+                }
+            }
+            if (!this.personID.equals(personID)){
+                //personID formatting
+                if (personID.length() != 10) {
+                    return false; // Invalid personID length
+                }
 
-                while ((currentLine = reader.readLine()) != null) {
-                    if (currentLine.startsWith("PersonID: " + this.personID)) {
-                        writer.write("PersonID: " + personID);
-                        writer.newLine();
-                        reader.readLine(); // Skip old address
-                        writer.write("Address: " + address);
-                        writer.newLine();
-                        reader.readLine(); // Skip old birthdate
-                        writer.write("Birthdate: " + birthdate);
-                        writer.newLine();
-                        reader.readLine(); // Skip separator
-                        writer.write("------");
-                        writer.newLine();
-                        updated = true;
-                    } else {
-                        writer.write(currentLine);
-                        writer.newLine();
+                if (personID.charAt (0) < '2' || personID.charAt(0) > '9' || personID.charAt(1) < '2' || personID.charAt(1) > '9') {
+                    return false; // First two characters must be between 2 and 9
+                }
+                
+                String middle = personID.substring(2, 8);
+                int specialCount = 0;
+                for (char c : middle.toCharArray()) {
+                    if (!Character.isLetterOrDigit(c)) {
+                        specialCount++;
                     }
+                }
+                if (specialCount < 2) {
+                    return false;
+                }
+
+                //ensure formatting of personID from function 1 is correct
+                if (!personID.substring(8, 10).matches("[A-Z]{2}")) {
+                    return false; // Last two characters must be uppercase letters
+                }
+            }
+            //ensure formatting of birthday from function 1 matches
+            if (!this.birthdate.equals(birthdate)) {
+                if (!birthdate.matches("^\\d{2}-\\d{2}-\\d{4}$")) {
+                    return false; // Invalid birthdate format
                 }
             }
 
-            if (updated == true){
-                if (file.delete()){
+            String currentLine;
+            while ((currentLine = reader.readLine()) != null) {
+                if (currentLine.startsWith("PersonID: " + this.personID)) {
+                    writer.write("PersonID: " + personID);
+                    writer.newLine();
+                    reader.readLine(); // Skip old FirstName
+                    writer.write("FirstName: " + firstName); 
+                    writer.newLine();
+                    reader.readLine(); // Skip old LastName
+                    writer.write("LastName: " + lastName);
+                    writer.newLine();
+                    reader.readLine(); // Skip old address
+                    writer.write("Address: " + address);
+                    writer.newLine();
+                    reader.readLine(); // Skip old birthdate
+                    writer.write("Birthdate: " + birthdate);
+                    writer.newLine();
+                    reader.readLine(); // Skip separator
+                    writer.write("------");
+                    writer.newLine();
+                    updated = true;
+                } else {
+                    writer.write(currentLine);
+                    writer.newLine();
+                }
+            }
+
+            if (updated) {
+                if (file.delete()) {
                     if(!tempFile.renameTo(file)){
                         System.err.println("Could not rename temp file.");
                         return false;
@@ -208,8 +214,7 @@ public class Person {
                 tempFile.delete(); //delete file if no update was made
                 return false; //person was not found on the file
             }
-        }
-        catch (IOException | ParseException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
             // Clean up temp file in case of exception during file operations
             if (tempFile.exists()) {
