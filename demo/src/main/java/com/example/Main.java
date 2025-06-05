@@ -25,7 +25,7 @@ public class Main {
         // Update personal details
         person.updatePersonalDetails("56!@abc#CD", "Jane", "Doe", "199|Grove St|Melbourne|Victoria|Australia", "15-11-1990", testFile);
 
-        // Add demerit points
+        // // Add demerit points
         person.addDemeritPoints("56!@abc#CD", 6, "11-05-2024", testFile);
         person.addDemeritPoints("56!@abc#CD", 6, "12-05-2024", testFile);
         person.addDemeritPoints("56!@abc#CD", 1, "13-05-2024", testFile);
