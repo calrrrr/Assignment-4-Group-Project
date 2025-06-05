@@ -269,8 +269,9 @@ public class Person {
 
             // Write to demerits file
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-                writer.write(personID + "|" + points + "|" + DATE_FORMAT.format(offenceDate) + "|" +
-                        (this.isSuspended ? "Suspended" : "Active"));
+                writer.write("Offence:\n");
+                writer.write("ID: " + personID + " | Demerit points: " + points + " | Offence Date: " + DATE_FORMAT.format(offenceDate) + " | License Status:" +
+                        (this.isSuspended ? " Suspended" : " Active"));
                 writer.newLine();
             }
 

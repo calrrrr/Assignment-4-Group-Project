@@ -28,8 +28,11 @@ public class Main {
         System.out.println("updatePersonalDetails result: " + updateResult);
 
         // Add demerit points
-        String demeritResult = person.addDemeritPoints("56!@abc#CD", 3, "10-05-2024", testFile);
-        System.out.println("addDemeritPoints result: " + demeritResult);
+        String demeritResultTwo = person.addDemeritPoints("56!@abc#CD", 6, "11-05-2024", testFile);
+        System.out.println("addDemeritPoints result: " + demeritResultTwo);
+
+        String demeritResultThree = person.addDemeritPoints("56!@abc#CD", 6, "05-05-2024", testFile);
+        System.out.println("addDemeritPoints result: " + demeritResultThree);
 
         // Check suspension
         boolean suspended = person.isSuspended();
