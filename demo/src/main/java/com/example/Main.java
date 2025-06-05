@@ -20,23 +20,16 @@ public class Main {
         Person person = new Person();
 
         // Add a person
-        boolean addResult = person.addPerson("56!@abc#CD", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990", testFile);
-        System.out.println("addPerson result: " + addResult);
+        person.addPerson("56!@abc#CD", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990", testFile);
 
         // Update personal details
-        boolean updateResult = person.updatePersonalDetails("56!@abc#CD", "Jane", "Doe", "199|Grove St|Melbourne|Victoria|Australia", "15-11-1990", testFile);
-        System.out.println("updatePersonalDetails result: " + updateResult);
+        person.updatePersonalDetails("56!@abc#CD", "Jane", "Doe", "199|Grove St|Melbourne|Victoria|Australia", "15-11-1990", testFile);
 
         // Add demerit points
-        String demeritResultTwo = person.addDemeritPoints("56!@abc#CD", 6, "11-05-2024", testFile);
-        System.out.println("addDemeritPoints result: " + demeritResultTwo);
-
-        String demeritResultThree = person.addDemeritPoints("56!@abc#CD", 6, "05-05-2024", testFile);
-        System.out.println("addDemeritPoints result: " + demeritResultThree);
-
-        // Check suspension
-        boolean suspended = person.isSuspended();
-        System.out.println("isSuspended result: " + suspended);
+        person.addDemeritPoints("56!@abc#CD", 6, "11-05-2024", testFile);
+        person.addDemeritPoints("56!@abc#CD", 6, "12-05-2024", testFile);
+        person.addDemeritPoints("56!@abc#CD", 1, "13-05-2024", testFile);
+        
 
         // Print file contents once at the end
         System.out.println("\nContents of test_output.txt:");

@@ -5,8 +5,8 @@ Address: 199|Grove St|Melbourne|Victoria|Australia
 Birthdate: 15-11-1990
 ------
 Offence:
-ID: 56!@abc#CD | Demerit points: 3 | Offence Date: 10-05-2024 | License Status: Active
-Offence:
 ID: 56!@abc#CD | Demerit points: 6 | Offence Date: 11-05-2024 | License Status: Active
 Offence:
-ID: 56!@abc#CD | Demerit points: 6 | Offence Date: 05-05-2024 | License Status: Suspended
+ID: 56!@abc#CD | Demerit points: 6 | Offence Date: 12-05-2024 | License Status: Active
+Offence:
+ID: 56!@abc#CD | Demerit points: 1 | Offence Date: 13-05-2024 | License Status: Suspended
